@@ -111,31 +111,42 @@ class HumanUser {
   constructor() {
     console.log('\nHumanUser instance created.\n\n');
     this.isLogged = false;
-
-    this.initializeLogin();
   }
 
   /**
-   * Method to initialize the login process
+   * Confirms that the user has been logged in
+   * @returns {boolean} - True if the user is logged in, false otherwise
    */
-  initializeLogin() {
-    console.log('\nInitializing login process...\n\n');
+  get isLoggedIn() {
+    return this.isLogged;
+  }
+}
+
+/**
+ * This Class is responsible for creating a website.
+ */
+class Website {
+  constructor() {
+    console.log('\nWebsite instance created.\n\n');
+    this.initialize();
+  }
+
+  /**
+   * Method to initialize the login process.
+   * It creates a modal and listens for a click event on the login button.
+   */
+  initialize() {
+    console.log('\nInitializing login elements...\n\n');
     const loginButton = document.getElementById('login-button');
-    const modal = document.getElementById('login-modal');
     const modalDialog = document.querySelector('.modal-dialog');
+
+    // Ensure modal is only created once
+    if (!modalDialog) {
+      this.createModal();
+    }
 
     loginButton.addEventListener('click', () => {
       console.log('\nLogin button clicked.\n\n');
-
-      // Ensure modal is only created once, check if it doesn't already exist
-      if (!modalDialog) {
-        this.createModal();
-      }
-
-      modal.addEventListener('show.bs.modal', () => {
-        modalDialog.classList.remove('animate__lightSpeedInLeft');
-        modalDialog.classList.add('animate__animated', 'animate__lightSpeedInRight', 'animate__slow');
-      });
 
       const bootstrapModal = new bootstrap.Modal(document.getElementById('login-modal'));
       bootstrapModal.show();
@@ -143,14 +154,17 @@ class HumanUser {
   }
 
   /**
-   * Method to create a modal
+   * Method to create a modal.
+   * That is, a form for user to login.
    */
   createModal() {
+    console.log('\nCreating login modal...\n\n');
     const modal = document.getElementById('login-modal');
     const navbar = document.querySelector('.navbar');
+    const bootstrapModal = new bootstrap.Modal(document.getElementById('login-modal'));
 
     modal.innerHTML = `
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered animate__animated animate__lightSpeedInRight animate__slow">
             <div class="modal-content card">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="register-modal">Registration Form</h1>
@@ -249,30 +263,27 @@ class HumanUser {
         </div>
         `;
 
+    // Insert the modal after the navbar
     navbar.parentNode.insertBefore(modal, navbar.nextSibling);
 
-    const bootstrapModal = new bootstrap.Modal(document.getElementById('login-modal'));
-    bootstrapModal.show();
-  }
-
-  /**
-   * Confirms that the user has been logged in
-   * @returns {boolean} - True if the user is logged in, false otherwise
-   */
-  get isLoggedIn() {
-    return this.isLogged;
+    const closeButton = document.getElementById('close-modal-button');
+    closeButton.addEventListener('click', () => {
+      bootstrapModal.hide();
+    });
   }
 }
 
 
 
 document.addEventListener('DOMContentLoaded', async function () {
-  const USERCOUNT = 10;
+  const USER_COUNT = 10;
+
   console.log('\nDOM fully loaded and parsed\n\n');
+
   console.log('\nCreating a new UserGenerator instance...\n\n');
   const userGenerator = new UserGenerator();
   console.log('\nSending request...\n\n');
-  await userGenerator.generateMultipleUsers(USERCOUNT);
+  await userGenerator.generateMultipleUsers(USER_COUNT);
 
   console.log('\nFetching all users...\n\n');
   const users = userGenerator.allUsers;
@@ -286,6 +297,9 @@ document.addEventListener('DOMContentLoaded', async function () {
   const nonStaffMembers = users.filter(user => !user.isStaff);
   console.log('\nNon-staff members:\n\n', nonStaffMembers);
 
+  console.log('\nCreating a new Website instance...\n\n');
+  const website = new Website();
+
   console.log('\nCreating a new CardGenerator instance...\n\n');
   const cardGenerator = new CardGenerator();
   console.log('\nGenerating cards...\n\n');
@@ -294,9 +308,6 @@ document.addEventListener('DOMContentLoaded', async function () {
   console.log('\nCreating a new HumanUser instance...\n\n');
   const humanUser = new HumanUser();
   console.log('\nIs the user logged in?\n\n', humanUser.isLoggedIn);
-
-  console.log('\nCreating Modal...\n\n');
-  // humanUser.createModal();
 });
 
 
