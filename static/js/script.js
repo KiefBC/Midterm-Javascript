@@ -168,6 +168,14 @@ class Website {
     `;
 
     document.body.appendChild(footer);
+
+    const loginModal = document.createElement('div');
+    loginModal.classList.add('modal', 'fade');
+    loginModal.id = 'login-modal';
+    loginModal.setAttribute('tabindex', '-1');
+    loginModal.setAttribute('aria-labelledby', 'login-user-modal');
+    loginModal.setAttribute('aria-hidden', 'true');
+    document.body.prepend(loginModal);
   }
 
   /**
@@ -342,16 +350,20 @@ class Website {
 
   controlLoginButton() {
     const navBarButton = document.getElementById('navbar-login-button');
-
-    // Remove any existing event listeners by cloning the button
-    // const newNavBarButton = navBarButton.cloneNode(true);
-    // navBarButton.parentNode.replaceChild(newNavBarButton, navBarButton);
+    const parentElement = navBarButton.parentElement;
 
     if (this.humanUser.isLogged) {
-      navBarButton.textContent = 'Logout';
-      navBarButton.addEventListener('click', () => this.logoutUser());
+      const newButton = document.createElement('button');
+      newButton.textContent = 'Logout';
+      newButton.id = 'navbar-login-button';
+      newButton.classList.add('btn', 'btn-outline-danger');
+      newButton.addEventListener('click', () => this.logoutUser());
+
+      // Replace the old button with the new one
+      parentElement.replaceChild(newButton, navBarButton);
     } else {
       navBarButton.textContent = 'Login';
+      navBarButton.removeEventListener('click', () => this.logoutUser());
       navBarButton.addEventListener('click', () => this.loginUser());
     }
   }
@@ -401,16 +413,33 @@ class Website {
       }
 
       this.removeSplashPage();
+      this.controlLoginButton();
     });
   }
 
   logoutUser() {
-    location.reload();
+    // location.reload();
+    console.log('Logging out...');
+    this.humanUser.isLogged = false;
+    this.humanUser.isStaff = false;
+    this.reBuild();
+  }
+
+  async startBuilding() {
+    console.log('Building website...');
+    this.createLandingPage();
+    this.initializeBasicElements();
+    this.initialize();
+    this.humanUser.createAccount();
+  }
+
+  reBuild() {
+    // remove all elements
+    document.body.innerHTML = '';
+    this.startBuilding().then(r => console.log('Rebuilding website...'));
   }
 }
 
-//TODO: RChange Logout button and swap with new button to break the modal
-//TODO: remove the modal HTML and place it in the method
 //TODO: Edit Navbar
 //TODO: Goldplate the website
 
@@ -421,13 +450,9 @@ document.addEventListener('DOMContentLoaded', async function () {
   const userGenerator = new UserGenerator();
   const website = new Website(humanUser, userGenerator);
 
+  await website.startBuilding();
+
   await userGenerator.generateMultipleUsers(USER_COUNT);
-
-  website.createLandingPage();
-  website.initializeBasicElements();
-  website.initialize();
-
-  humanUser.createAccount();
 });
 
 
