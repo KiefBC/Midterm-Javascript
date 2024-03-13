@@ -409,9 +409,13 @@ class Website {
   }
 }
 
+//TODO: RChange Logout button and swap with new button to break the modal
+//TODO: remove the modal HTML and place it in the method
+//TODO: Edit Navbar
+//TODO: Goldplate the website
+
 document.addEventListener('DOMContentLoaded', async function () {
   const USER_COUNT = 10;
-
 
   const humanUser = new HumanUser();
   const userGenerator = new UserGenerator();
