@@ -468,8 +468,8 @@ document.addEventListener('DOMContentLoaded', async function () {
   const userGenerator = new UserGenerator();
   const website = new Website(humanUser, userGenerator);
 
+  // Async because we are fetching data from an API
   await website.startBuilding();
-
   await userGenerator.generateMultipleUsers(USER_COUNT);
 });
 
