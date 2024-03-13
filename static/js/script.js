@@ -103,6 +103,9 @@ class HumanUser {
     return this.isStaff;
   }
 
+  /**
+   * Sets a default username and password for the superuser
+   */
   createAccount() {
     this.userName = `superuser`;
     this.password = `password`;
@@ -348,6 +351,10 @@ class Website {
     }
   }
 
+  /**
+   * Method to control the login button
+   * It will change the button text and functionality based on the user's login status
+   */
   controlLoginButton() {
     const navBarButton = document.getElementById('navbar-login-button');
     const parentElement = navBarButton.parentElement;
@@ -368,6 +375,9 @@ class Website {
     }
   }
 
+  /**
+   * Method to log in the user
+   */
   loginUser() {
     console.log('\nLogin button clicked.\n\n');
     this.humanUser.isLogged = true;
@@ -417,6 +427,9 @@ class Website {
     });
   }
 
+  /**
+   * Method to log out the user
+   */
   logoutUser() {
     // location.reload();
     console.log('Logging out...');
@@ -425,6 +438,9 @@ class Website {
     this.reBuild();
   }
 
+  /**
+   * Method to start building the website
+   */
   async startBuilding() {
     console.log('Building website...');
     this.createLandingPage();
@@ -433,6 +449,9 @@ class Website {
     this.humanUser.createAccount();
   }
 
+  /**
+   * Method to rebuild the website by removing all elements and starting over
+   */
   reBuild() {
     // remove all elements
     document.body.innerHTML = '';
@@ -440,7 +459,6 @@ class Website {
   }
 }
 
-//TODO: Edit Navbar
 //TODO: Goldplate the website
 
 document.addEventListener('DOMContentLoaded', async function () {
