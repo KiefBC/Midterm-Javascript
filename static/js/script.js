@@ -133,8 +133,10 @@ class Website {
     navbar.setAttribute('data-bs-theme', 'dark');
 
     navbar.innerHTML = `
-      <div class="container-fluid">
         <a class="navbar-brand" href="#">Placeholder Website Name</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+          </button>
         <div class="collapse navbar-collapse">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
@@ -149,7 +151,6 @@ class Website {
           </ul>
           <button id="navbar-login-button" class="btn btn-outline-success" type="submit">Login</button>
         </div>
-      </div>
     `;
 
     document.body.prepend(navbar);
@@ -414,7 +415,26 @@ class Website {
         this.addStaffButton();
       } else {
         // Only print one user, and all the staff members
-        this.generateCard(this.userGenerator.allUsers[0]);
+        let standardUser = this.userGenerator.allUsers[0];
+        console.log("Stand User: ", standardUser.isStaff);
+        if (!standardUser.isStaff) {
+          console.log("Generating standard user...", standardUser);
+          this.generateCard(standardUser);
+        } else {
+          // grab the first non-staff user
+          let isFound = false;
+          while (!isFound) {
+            for (const generatedUser of this.userGenerator.allUsers) {
+              if (!generatedUser.isStaff) {
+                console.log("User is not Staff, generating card....", generatedUser);
+                this.generateCard(generatedUser);
+                isFound = true;
+                break;
+              }
+            }
+          }
+        }
+        // this.generateCard(this.userGenerator.allUsers[0]);
         for (const generatedUser of this.userGenerator.allUsers) {
           if (generatedUser.isStaff) {
             this.generateCard(generatedUser);
@@ -446,7 +466,7 @@ class Website {
     this.createLandingPage();
     this.initializeBasicElements();
     this.initialize();
-    this.humanUser.createAccount();
+    // this.humanUser.createAccount();
   }
 
   /**
@@ -463,6 +483,10 @@ class Website {
 
 document.addEventListener('DOMContentLoaded', async function () {
   const USER_COUNT = 10;
+
+  const mainContent = document.createElement('div');
+  mainContent.setAttribute('id', 'main-content');
+  document.body.insertBefore(mainContent, document.body.firstChild);
 
   const humanUser = new HumanUser();
   const userGenerator = new UserGenerator();
