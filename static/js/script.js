@@ -2,6 +2,8 @@
  * This Class is responsible for generating user data using the Random User Generator API.
  */
 class UserGenerator {
+  //TODO: Change from API to a local JSON file?
+  // Or create an Array first/last name and use Math.random() to generate a name?
   constructor() {
     console.log('\nUserGenerator instance created.\n\n');
     this.usersObjArray = []; // Array to hold generated user data
@@ -297,6 +299,7 @@ class Website {
    * @param generatedUser - A user object
    */
   generateCard(generatedUser) {
+    //TODO: Refactor this method, why are we using this.htmlContent?
     const cardContainer = document.getElementById('card-div');
 
     this.htmlContent = `
@@ -398,6 +401,7 @@ class Website {
    * Method to log in the user
    */
   loginUser() {
+    //TODO: Clean up the end of this method, the logic is a bit convoluted
     console.log('\nLogin button clicked.\n\n');
     this.humanUser.isLogged = true;
     this.bootstrapModal = new bootstrap.Modal(document.getElementById('login-modal'));
@@ -491,7 +495,6 @@ class Website {
     this.createLandingPage();
     this.initializeBasicElements();
     this.initialize();
-    // this.humanUser.createAccount();
   }
 
   /**
@@ -513,10 +516,6 @@ class Website {
 
 document.addEventListener('DOMContentLoaded', async function () {
   const USER_COUNT = 10;
-
-  const mainContent = document.createElement('div');
-  mainContent.setAttribute('id', 'main-content');
-  document.body.insertBefore(mainContent, document.body.firstChild);
 
   const humanUser = new HumanUser();
   const userGenerator = new UserGenerator();
