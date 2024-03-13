@@ -124,7 +124,7 @@ class Website {
   /**
    * Method to initialize the basic elements of the website
    */
-  initializeBasicElements(userGenerator, humanUser) {
+  initializeBasicElements() {
     const navbar = document.createElement('nav');
     navbar.classList.add('navbar', 'navbar-expand-lg', 'bg-dark');
     navbar.setAttribute('data-bs-theme', 'dark');
@@ -168,31 +168,6 @@ class Website {
     `;
 
     document.body.appendChild(footer);
-
-    // for (const generatedUser of userGenerator.allUsers) {
-    //   this.generateCard(generatedUser); // Generates a card for the user
-    //   if (humanUser.isStaff) { // Checks if the user is a staff member
-    //     this.addStaffButton(generatedUser); // Adds a "Staff" button to the user's card
-    //   }
-
-    if (humanUser.isStaff) {
-      console.log("humanUser is staff: ", humanUser.isStaff);
-      for (const generatedUser of userGenerator.allUsers) {
-        this.generateCard(generatedUser); // Generates a card for the user
-        this.addStaffButton(generatedUser); // Adds a "Staff" button to the user's card
-      }
-    } else {
-      console.log('User logged in.');
-      console.log("humanUser is staff: ", humanUser.isStaff);
-      // Only print one user, and all the staff members
-      this.generateCard(userGenerator.allUsers[0]);
-      for (const generatedUser of userGenerator.allUsers) {
-        if (generatedUser.isStaff) {
-          console.log('Staff member found.');
-          this.generateCard(generatedUser);
-        }
-      }
-    }
   }
 
   /**
@@ -215,16 +190,16 @@ class Website {
    * Method to initialize the login process.
    * It creates a modal and listens for a click event on the login button.
    */
-  initialize(humanUser) {
+  initialize() {
     console.log('\nInitializing login elements...\n\n');
-    // const loginButton = document.getElementById('navbar-login-button');
     const modalDialog = document.querySelector('.modal-dialog');
 
-    this.controlLoginButton(humanUser);
+    this.controlLoginButton();
 
     // Ensure modal is only created once
     if (!modalDialog) {
-      this.createLoginModal(humanUser);
+      console.log('Modal does not exist. Creating modal...');
+      this.createLoginModal();
     }
   }
 
@@ -232,7 +207,7 @@ class Website {
    * Method to create a modal.
    * That is, a form for user to login.
    */
-  createLoginModal(humanUser) {
+  createLoginModal() {
     console.log('\nCreating login modal...\n\n');
     const modal = document.getElementById('login-modal');
     const navbar = document.querySelector('.navbar');
@@ -285,62 +260,6 @@ class Website {
         </div>
         `;
 
-    const submitButton = document.getElementById('login-submit-button');
-    const closeButton = document.getElementById('close-modal-button');
-    const form = document.getElementById('login-form');
-    const firstName = document.getElementById('first-name');
-
-    submitButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (form.checkValidity()) {
-
-        console.log('\nSubmit button clicked.\n\n');
-
-        // Check if the user is a staff member
-        if (firstName.value === 'superuser') {
-          console.log('Superuser logged in.');
-          humanUser.isLogged = true;
-          humanUser.isStaff = true;
-
-          const cards = document.querySelectorAll('.generated-cards');
-          cards.forEach(card => {
-            const staffButton = document.createElement('button');
-            staffButton.classList.add('btn', 'btn-primary');
-            staffButton.textContent = 'Staff Button';
-
-            const staffButtonDiv = card.querySelector('.staff-button-div');
-            staffButtonDiv.appendChild(staffButton);
-
-            card.hidden = false;
-          });
-        } else {
-          console.log('User logged in.');
-          humanUser.isLogged = true;
-
-          const cards = document.querySelectorAll('.generated-cards');
-          cards.forEach(card => {
-            card.hidden = false;
-          });
-        }
-
-        this.bootstrapModal.hide();
-
-        this.removeSplashPage();
-      } else {
-        console.log('Form is invalid.');
-      }
-
-      const navBarButton = document.getElementById('navbar-login-button');
-      navBarButton.textContent = 'Logout';
-      navBarButton.addEventListener('click', () => this.logoutUser());
-    });
-
-    closeButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      console.log('Close button clicked.');
-    });
-
-    // Insert the modal after the navbar
     navbar.parentNode.insertBefore(modal, navbar.nextSibling);
   }
 
@@ -349,10 +268,10 @@ class Website {
    * @param generatedUser - A user object
    */
   generateCard(generatedUser) {
-    this.cardContainer = document.getElementById('card-div');
+    const cardContainer = document.getElementById('card-div');
 
     this.htmlContent = `
-        <div class="col-md-4 my-5 mx-auto generated-cards" hidden>
+        <div class="col-md-4 my-5 mx-auto generated-cards">
           <div class="card">
             <img src="${generatedUser.picture}" class="card-img-top" alt="User Image">
             <div class="card-body">
@@ -360,7 +279,7 @@ class Website {
               <p class="card-text">Username: ${generatedUser.userName}</p>
               <p class="card-text">Email: ${generatedUser.email}</p>
               <p class="card-text">Date of Birth: ${generatedUser.dateOfBirth}</p>
-              <p class="card-text">Staff Member: ${generatedUser.isStaff ? 'Yes' : 'No'}</p>
+              <p class="card-text is-staff">Staff Member: ${generatedUser.isStaff ? 'Yes' : 'No'}</p>
             </div>
             <div class="staff-button-div">
             </div>
@@ -368,23 +287,30 @@ class Website {
         </div>
     `;
 
-    this.cardContainer.innerHTML += this.htmlContent;
+    cardContainer.innerHTML += this.htmlContent;
   }
 
   /**
    * This will be used to add a button to the card if the user is a staff member
    */
-  addStaffButton(humanUser) {
-    const staffButtonDiv = document.getElementById('staff-button-div');
-    const staffButton = document.createElement('button');
-    staffButton.classList.add('btn', 'btn-primary');
-    staffButton.textContent = 'Staff';
-    staffButton.id = 'staff-button';
-    staffButton.addEventListener('click', () => {
-      console.log('Staff button clicked.');
-      if (humanUser.isStaffMember) {
-        staffButtonDiv.appendChild(staffButton);
-      }
+  addStaffButton() {
+    console.log('Adding staff button...')
+    const staffButtonDiv = document.querySelectorAll('.staff-button-div');
+    let increment = 0;
+
+    for (const staffButton of staffButtonDiv) {
+      const button = document.createElement('button');
+      button.classList.add('btn', 'btn-primary', 'staff-button');
+      button.textContent = 'Staff';
+      button.id = `staff-button-${increment++}`;
+      staffButton.appendChild(button);
+    }
+
+    const staffButtons = document.querySelectorAll('.staff-button');
+    staffButtons.forEach((staffButton) => {
+      staffButton.addEventListener('click', (event) => {
+        this.deleteUser(event.target);
+      });
     });
   }
 
@@ -397,27 +323,85 @@ class Website {
     splashPage.remove();
   }
 
-  controlLoginButton(humanUser) {
-    const navBarButton = document.getElementById('navbar-login-button');
+  /**
+   * This method will delete users from the website via the Staff button
+   */
+  deleteUser(event) {
+    console.log('Deleting user...');
+    console.log('Button clicked:', event.id);
 
-    // Remove any existing event listeners by cloning the button
-    const newNavBarButton = navBarButton.cloneNode(true);
-    navBarButton.parentNode.replaceChild(newNavBarButton, navBarButton);
+    const card = event.closest('.generated-cards');
 
-    if (humanUser.isLoggedIn) {
-      newNavBarButton.textContent = 'Logout';
-      newNavBarButton.addEventListener('click', () => this.logoutUser(humanUser));
+    // if the card has class "is-staff" and the value is "Yes", console.log("You can't delete a staff member.")
+    if (card.querySelector('.is-staff').textContent.includes('Yes')) {
+      console.log("You can't delete a staff member.");
     } else {
-      newNavBarButton.textContent = 'Login';
-      newNavBarButton.addEventListener('click', () => this.loginUser(humanUser));
+      card.remove();
     }
   }
 
-  loginUser(humanUser) {
+  controlLoginButton() {
+    const navBarButton = document.getElementById('navbar-login-button');
+
+    // Remove any existing event listeners by cloning the button
+    // const newNavBarButton = navBarButton.cloneNode(true);
+    // navBarButton.parentNode.replaceChild(newNavBarButton, navBarButton);
+
+    if (this.humanUser.isLogged) {
+      navBarButton.textContent = 'Logout';
+      navBarButton.addEventListener('click', () => this.logoutUser());
+    } else {
+      navBarButton.textContent = 'Login';
+      navBarButton.addEventListener('click', () => this.loginUser());
+    }
+  }
+
+  loginUser() {
     console.log('\nLogin button clicked.\n\n');
-    humanUser.isLogged = true;
+    this.humanUser.isLogged = true;
     this.bootstrapModal = new bootstrap.Modal(document.getElementById('login-modal'));
     this.bootstrapModal.show();
+
+    const form = document.getElementById('login-form');
+    const login = document.getElementById('first-name');
+    const submitButton = document.getElementById('login-submit-button');
+
+    submitButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (form.checkValidity()) {
+        console.log('Form is valid via loginUser().');
+        this.humanUser.isLogged = true;
+        this.controlLoginButton();
+        this.bootstrapModal.hide();
+
+        if (login.value === 'superuser') {
+          console.log('Superuser logged in via loginUser()');
+          this.humanUser.isStaff = true;
+        } else {
+          console.log('User logged in via loginUser().');
+        }
+      } else {
+        console.log('Form is invalid.');
+      }
+
+      console.log('Is the user staff?', this.humanUser.isStaff);
+      if (this.humanUser.isStaff) {
+        for (const generatedUser of this.userGenerator.allUsers) {
+          this.generateCard(generatedUser); // Generates a card for the user// Adds a "Staff" button to the user's card
+        }
+        this.addStaffButton();
+      } else {
+        // Only print one user, and all the staff members
+        this.generateCard(this.userGenerator.allUsers[0]);
+        for (const generatedUser of this.userGenerator.allUsers) {
+          if (generatedUser.isStaff) {
+            this.generateCard(generatedUser);
+          }
+        }
+      }
+
+      this.removeSplashPage();
+    });
   }
 
   logoutUser() {
@@ -436,8 +420,8 @@ document.addEventListener('DOMContentLoaded', async function () {
   await userGenerator.generateMultipleUsers(USER_COUNT);
 
   website.createLandingPage();
-  website.initializeBasicElements(userGenerator, humanUser);
-  website.initialize(humanUser);
+  website.initializeBasicElements();
+  website.initialize();
 
   humanUser.createAccount();
 });
