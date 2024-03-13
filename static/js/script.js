@@ -8,7 +8,6 @@ class UserGenerator {
     this.employeeID = 1; // Unique ID for each user (employee1, employee2, etc.)
     this.STAFFCOUNT = 4; // Number of staff members + 1 (for the first 3 users)
 
-    // this.generateMultipleUsers(this.USERCOUNT).then(r => console.log(`\nGenerated ${this.USERCOUNT} users. The size of the Array Object is: ${this.usersObjArray.length}\n\n`));
   }
 
   /**
@@ -67,31 +66,6 @@ class UserGenerator {
 class CardGenerator {
   constructor() {
     console.log('\nCardGenerator instance created.\n\n')
-    this.cardContainer = document.getElementById('card-div');
-    this.htmlContent = '';
-  }
-
-  /**
-   * Method to generate a user card
-   * @param user - A user object
-   */
-  generateCard(user) {
-    this.htmlContent = `
-        <div class="col-md-4 my-5 px-5 mx-auto">
-          <div class="card">
-            <img src="${user.picture}" class="card-img-top" alt="User Image">
-            <div class="card-body">
-              <h5 class="card-title">${user.firstName} ${user.lastName}</h5>
-              <p class="card-text">Username: ${user.userName}</p>
-              <p class="card-text">Email: ${user.email}</p>
-              <p class="card-text">Date of Birth: ${user.dateOfBirth}</p>
-              <p class="card-text">Staff Member: ${user.isStaff ? 'Yes' : 'No'}</p>
-            </div>
-          </div>
-        </div>
-    `;
-
-    this.cardContainer.innerHTML += this.htmlContent;
   }
 
   /**
@@ -111,14 +85,45 @@ class HumanUser {
   constructor() {
     console.log('\nHumanUser instance created.\n\n');
     this.isLogged = false;
+    this.isStaff = true;
+    this.userName = null;
+    this.password = null;
   }
 
   /**
    * Confirms that the user has been logged in
-   * @returns {boolean} - True if the user is logged in, false otherwise
+   * @returns - True if the user is logged in, false otherwise
    */
   get isLoggedIn() {
     return this.isLogged;
+  }
+
+  /**
+   * Sets the user's login status
+   */
+  set isLoggedIn(status) {
+    this.isLogged = status;
+
+    if (status) {
+      console.log('User has been logged in.');
+      this.isLogged = true;
+    } else {
+      console.log('User has been logged out.');
+      this.isLogged = false;
+    }
+  }
+
+  /**
+   * Confirms that the user is a staff member
+   * @returns - True if the user is a staff member, false otherwise
+   */
+  get isStaffMember() {
+    return this.isStaff;
+  }
+
+  createAccount() {
+    this.userName = `superuser`;
+    this.password = `password`;
   }
 }
 
@@ -128,28 +133,29 @@ class HumanUser {
 class Website {
   constructor() {
     console.log('\nWebsite instance created.\n\n');
-    this.initialize();
+    this.htmlContent = '';
+    this.bootstrapModal = null;
   }
 
   /**
    * Method to initialize the login process.
    * It creates a modal and listens for a click event on the login button.
    */
-  initialize() {
+  initialize(humanUser) {
     console.log('\nInitializing login elements...\n\n');
     const loginButton = document.getElementById('login-button');
     const modalDialog = document.querySelector('.modal-dialog');
 
     // Ensure modal is only created once
     if (!modalDialog) {
-      this.createModal();
+      this.createLoginModal(humanUser);
     }
 
     loginButton.addEventListener('click', () => {
       console.log('\nLogin button clicked.\n\n');
 
-      const bootstrapModal = new bootstrap.Modal(document.getElementById('login-modal'));
-      bootstrapModal.show();
+      this.bootstrapModal = new bootstrap.Modal(document.getElementById('login-modal'));
+      this.bootstrapModal.show();
     });
   }
 
@@ -157,23 +163,22 @@ class Website {
    * Method to create a modal.
    * That is, a form for user to login.
    */
-  createModal() {
+  createLoginModal(humanUser) {
     console.log('\nCreating login modal...\n\n');
     const modal = document.getElementById('login-modal');
     const navbar = document.querySelector('.navbar');
-    const bootstrapModal = new bootstrap.Modal(document.getElementById('login-modal'));
 
     modal.innerHTML = `
       <div class="modal-dialog modal-dialog-centered animate__animated animate__lightSpeedInRight animate__slow">
             <div class="modal-content card">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="register-modal">Registration Form</h1>
+                    <h1 class="modal-title fs-5" id="login-user-modal">Login</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="register-user-form" class="was-validated" novalidate>
+                    <form id="login-form" class="was-validated" novalidate>
                         <div class="mb-3 input-group">
-                            <label for="first-name" class="form-label" hidden>First Name</label>
+                            <label for="first-name" class="form-label" hidden>Username</label>
                             <span class="input-group-text">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-person-standing" viewBox="0 0 16 16">
@@ -186,7 +191,7 @@ class Website {
                             <div class="invalid-feedback text-center">Please fill out this field.</div>
                         </div>
                         <div class="mb-3 input-group">
-                            <label for="last-name" class="form-label" hidden>Last Name</label>
+                            <label for="last-name" class="form-label" hidden>Password</label>
                             <span class="input-group-text">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-person-walking" viewBox="0 0 16 16">
@@ -199,63 +204,11 @@ class Website {
                             <div class="valid-feedback text-center">Valid.</div>
                             <div class="invalid-feedback text-center">Please fill out this field.</div>
                         </div>
-                        <div class="mb-3 input-group">
-                            <label for="age" class="form-label" hidden>Age</label>
-                            <span class="input-group-text">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                     class="bi bi-lungs-fill" viewBox="0 0 16 16">
-                                  <path d="M8 1a.5.5 0 0 1 .5.5v5.243L9 7.1V4.72C9 3.77 9.77 3 10.72 3c.524 0 1.023.27 1.443.592.431.332.847.773 1.216 1.229.736.908 1.347 1.946 1.58 2.48.176.405.393 1.16.556 2.011.165.857.283 1.857.24 2.759-.04.867-.232 1.79-.837 2.33-.67.6-1.622.556-2.741-.004l-1.795-.897A2.5 2.5 0 0 1 9 11.264V8.329l-1-.715-1 .715V7.214c-.1 0-.202.03-.29.093l-2.5 1.786a.5.5 0 1 0 .58.814L7 8.329v2.935A2.5 2.5 0 0 1 5.618 13.5l-1.795.897c-1.12.56-2.07.603-2.741.004-.605-.54-.798-1.463-.838-2.33-.042-.902.076-1.902.24-2.759.164-.852.38-1.606.558-2.012.232-.533.843-1.571 1.579-2.479.37-.456.785-.897 1.216-1.229C4.257 3.27 4.756 3 5.28 3 6.23 3 7 3.77 7 4.72V7.1l.5-.357V1.5A.5.5 0 0 1 8 1m3.21 8.907a.5.5 0 1 0 .58-.814l-2.5-1.786A.5.5 0 0 0 9 7.214V8.33z"/>
-                                </svg>
-                            </span>
-                            <input type="number" class="form-control" id="age" placeholder="Enter your age..." required min="0" max="120">
-                            <div class="valid-feedback text-center">Valid.</div>
-                            <div class="invalid-feedback text-center">Please fill out this field.</div>
-                        </div>
-                        <div class="mb-3 input-group">
-                            <label for="email" class="form-label" hidden>Email address</label>
-                            <span class="input-group-text">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                     class="bi bi-postcard-fill" viewBox="0 0 16 16">
-                                  <path d="M11 8h2V6h-2z"/>
-                                  <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.5.5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0zM2 5.5a.5.5 0 0 0 .5.5H6a.5.5 0 0 0 0-1H2.5a.5.5 0 0 0-.5.5M2.5 7a.5.5 0 0 0 0 1H6a.5.5 0 0 0 0-1zM2 9.5a.5.5 0 0 0 .5.5H6a.5.5 0 0 0 0-1H2.5a.5.5 0 0 0-.5.5m8-4v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5"/>
-                                </svg>
-                            </span>
-                            <input type="email" class="form-control" id="email" placeholder="Enter your email..." required pattern="[^@\\s]+@[^@\\s]+\\.[^@\\s]+">
-                            <div class="valid-feedback text-center">Valid.</div>
-                            <div class="invalid-feedback text-center">Please fill out this field.</div>
-                        </div>
-                        <div class="mb-3 input-group">
-                            <label for="postal-code" class="form-label" hidden>Postal Code</label>
-                            <span class="input-group-text">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                     class="bi bi-fuel-pump-fill" viewBox="0 0 16 16">
-                                  <path d="M1 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1 2 2v.5a.5.5 0 0 0 1 0V8h-.5a.5.5 0 0 1-.5-.5V4.375a.5.5 0 0 1 .5-.5h1.495c-.011-.476-.053-.894-.201-1.222a.97.97 0 0 0-.394-.458c-.184-.11-.464-.195-.9-.195a.5.5 0 0 1 0-1q.846-.002 1.412.336c.383.228.634.551.794.907.295.655.294 1.465.294 2.081V7.5a.5.5 0 0 1-.5.5H15v4.5a1.5 1.5 0 0 1-3 0V12a1 1 0 0 0-1-1v4h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1zm2.5 0a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5z"/>
-                                </svg>
-                            </span>
-                            <input type="text" class="form-control" id="postal-code" placeholder="Enter your postal..."
-                                   required pattern="^[A-Za-z]\\d[A-Za-z] ?\\d[A-Za-z]\\d$">
-                            <div class="valid-feedback text-center">Valid.</div>
-                            <div class="invalid-feedback text-center">Please fill out this field.</div>
-                        </div>
-                        <div class="mb-3 input-group">
-                            <label for="phone-number" class="form-label" hidden>Phone Number</label>
-                            <span class="input-group-text">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                     class="bi bi-reception-4" viewBox="0 0 16 16">
-                                  <path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5z"/>
-                                </svg>
-                            </span>
-                            <input type="tel" class="form-control" id="phone-number"
-                                   placeholder="Enter your phone number..." required pattern="^(?:\\d{3}-\\d{3}-\\d{4}|\\d{10}|\\d{3} \\d{3} \\d{4})$">
-                            <div class="valid-feedback text-center">Valid.</div>
-                            <div class="invalid-feedback text-center">Please fill out this field.</div>
-                        </div>
                     </form>
-                    <div class="d-flex flex-column justify-content-center mb-3" id="register-response">
+                    <div class="d-flex flex-column justify-content-center mb-3" id="login-response">
                     </div>
-                    <p>Form Will Keep Correct Values</p>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="register-submit-btn">Submit</button>
+                        <button type="button" class="btn btn-primary" id="login-submit-button">Submit</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-modal-button">Close</button>
                     </div>
                 </div>
@@ -263,51 +216,114 @@ class Website {
         </div>
         `;
 
+    const submitButton = document.getElementById('login-submit-button');
+    const closeButton = document.getElementById('close-modal-button');
+    const form = document.getElementById('login-form');
+
+    submitButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (form.checkValidity()) {
+        console.log('\nSubmit button clicked.\n\n');
+        humanUser.isLogged = true;
+        console.log('Is logged in:', humanUser.isLoggedIn);
+
+        this.bootstrapModal.hide();
+
+        // add a button to each card
+        const staffButton = document.createElement('button');
+        staffButton.classList.add('btn', 'btn-primary');
+        staffButton.textContent = 'Staff';
+
+
+        const cards = document.querySelectorAll('.card');
+        cards.forEach((card) => {
+          const staffButtonDiv = document.getElementById('staff-button-div');
+          staffButtonDiv.innerHTML = `
+            <button id="staff-button" class="btn btn-primary">Staff</button>
+            `;
+          //TODO: Verify we have the div in the correct spot.
+        });
+      } else {
+        console.log('Form is invalid.');
+      }
+    });
+
+    closeButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      console.log('Close button clicked.');
+    });
+
     // Insert the modal after the navbar
     navbar.parentNode.insertBefore(modal, navbar.nextSibling);
+  }
 
-    const closeButton = document.getElementById('close-modal-button');
-    closeButton.addEventListener('click', () => {
-      bootstrapModal.hide();
+  /**
+   * Method to generate a user card
+   * @param generatedUser - A user object
+   */
+  generateCard(generatedUser) {
+    this.cardContainer = document.getElementById('card-div');
+
+    this.htmlContent = `
+        <div class="col-md-4 my-5 mx-auto">
+          <div class="card">
+            <img src="${generatedUser.picture}" class="card-img-top" alt="User Image">
+            <div class="card-body">
+              <h5 class="card-title">${generatedUser.firstName} ${generatedUser.lastName}</h5>
+              <p class="card-text">Username: ${generatedUser.userName}</p>
+              <p class="card-text">Email: ${generatedUser.email}</p>
+              <p class="card-text">Date of Birth: ${generatedUser.dateOfBirth}</p>
+              <p class="card-text">Staff Member: ${generatedUser.isStaff ? 'Yes' : 'No'}</p>
+            </div>
+            <div id="staff-button-div">
+            </div>
+          </div>
+        </div>
+    `;
+
+    this.cardContainer.innerHTML += this.htmlContent;
+  }
+
+  /**
+   * This will be used to add a button to the card if the user is a staff member
+   */
+  addStaffButton(humanUser) {
+    const staffButtonDiv = document.getElementById('staff-button-div');
+    const staffButton = document.createElement('button');
+    staffButton.classList.add('btn', 'btn-primary');
+    staffButton.textContent = 'Staff';
+    staffButton.id = 'staff-button';
+    const card = document.getElementById('staff-button');
+    staffButton.addEventListener('click', () => {
+      console.log('Staff button clicked.');
+      if (humanUser.isStaffMember) {
+        staffButtonDiv.appendChild(staffButton);
+      }
     });
   }
 }
 
-
-
 document.addEventListener('DOMContentLoaded', async function () {
   const USER_COUNT = 10;
 
-  console.log('\nDOM fully loaded and parsed\n\n');
+  // Create a human user
+  const humanUser = new HumanUser();
+  humanUser.createAccount();
 
-  console.log('\nCreating a new UserGenerator instance...\n\n');
+  // Generate users
   const userGenerator = new UserGenerator();
-  console.log('\nSending request...\n\n');
   await userGenerator.generateMultipleUsers(USER_COUNT);
 
-  console.log('\nFetching all users...\n\n');
-  const users = userGenerator.allUsers;
-  console.log('\nAll users:', users);
-
-  console.log('\nFiltering staff members...\n\n')
-  const staffMembers = users.filter(user => user.isStaff);
-  console.log('\nStaff members:\n', staffMembers);
-
-  console.log('\nFiltering non-staff members...\n\n');
-  const nonStaffMembers = users.filter(user => !user.isStaff);
-  console.log('\nNon-staff members:\n\n', nonStaffMembers);
-
-  console.log('\nCreating a new Website instance...\n\n');
+  // Create website
   const website = new Website();
+  website.initialize(humanUser);
 
-  console.log('\nCreating a new CardGenerator instance...\n\n');
-  const cardGenerator = new CardGenerator();
-  console.log('\nGenerating cards...\n\n');
-  users.forEach(user => cardGenerator.generateCard(user));
-
-  console.log('\nCreating a new HumanUser instance...\n\n');
-  const humanUser = new HumanUser();
-  console.log('\nIs the user logged in?\n\n', humanUser.isLoggedIn);
+  for (const generatedUser of userGenerator.allUsers) {
+    website.generateCard(generatedUser); // Generates a card for the user
+    if (generatedUser.isStaffMember) { // Checks if the user is a staff member
+      website.addStaffButton(generatedUser); // Adds a "Staff" button to the user's card
+    }
+  }
 });
 
 
