@@ -128,29 +128,43 @@ class Website {
    * Method to initialize the basic elements of the website
    */
   initializeBasicElements() {
+    const mainContent = document.getElementById('main-content');
     const navbar = document.createElement('nav');
     navbar.classList.add('navbar', 'navbar-expand-lg', 'bg-dark');
     navbar.setAttribute('data-bs-theme', 'dark');
 
     navbar.innerHTML = `
-        <a class="navbar-brand" href="#">Placeholder Website Name</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-          </button>
-        <div class="collapse navbar-collapse">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-            </li>
+   <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Dropdown
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
           </ul>
-          <button id="navbar-login-button" class="btn btn-outline-success" type="submit">Login</button>
-        </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+        </li>
+      </ul>
+        <button id="navbar-login-button" class="btn btn-outline-success" type="submit">Search</button>
+    </div>
+  </div>
     `;
 
     document.body.prepend(navbar);
@@ -161,7 +175,7 @@ class Website {
     rowDiv.classList.add('row');
     rowDiv.id = 'card-div';
     containerDiv.appendChild(rowDiv);
-    document.body.appendChild(containerDiv);
+    mainContent.appendChild(containerDiv);
 
     const footer = document.createElement('footer');
     footer.classList.add('bg-dark', 'text-center', 'text-white', 'py-3');
@@ -171,7 +185,7 @@ class Website {
       </div>
     `;
 
-    document.body.appendChild(footer);
+    mainContent.appendChild(footer);
 
     const loginModal = document.createElement('div');
     loginModal.classList.add('modal', 'fade');
@@ -179,7 +193,9 @@ class Website {
     loginModal.setAttribute('tabindex', '-1');
     loginModal.setAttribute('aria-labelledby', 'login-user-modal');
     loginModal.setAttribute('aria-hidden', 'true');
-    document.body.prepend(loginModal);
+
+    // append after the navbar
+    navbar.parentNode.insertBefore(loginModal, navbar.nextSibling);
   }
 
   /**
@@ -187,6 +203,7 @@ class Website {
    * A modal will pop up and ask the user to log in.
    */
   createLandingPage() {
+    const mainContainer = document.getElementById('main-content');
     const landingPage = document.createElement('div');
     landingPage.classList.add('container', 'd-flex', 'flex-column', 'align-items-center', 'justify-content-center', 'min-vh-100');
     landingPage.id = 'landing-page';
@@ -195,7 +212,7 @@ class Website {
 <!--      <button id="splash-page-login-button" class="btn btn-primary">Login</button>-->
     `;
 
-    document.body.appendChild(landingPage);
+    mainContainer.prepend(landingPage);
   }
 
   /**
@@ -365,6 +382,7 @@ class Website {
       newButton.textContent = 'Logout';
       newButton.id = 'navbar-login-button';
       newButton.classList.add('btn', 'btn-outline-danger');
+
       newButton.addEventListener('click', () => this.logoutUser());
 
       // Replace the old button with the new one
@@ -453,9 +471,11 @@ class Website {
   logoutUser() {
     // location.reload();
     console.log('Logging out...');
-    this.humanUser.isLogged = false;
-    this.humanUser.isStaff = false;
-    this.reBuild();
+    // this.humanUser.isLogged = false;
+    // this.humanUser.isStaff = false;
+    // this.reBuild();
+
+    location.reload();
   }
 
   /**
@@ -463,6 +483,11 @@ class Website {
    */
   async startBuilding() {
     console.log('Building website...');
+
+    const mainContent = document.createElement('div');
+    mainContent.setAttribute('id', 'main-content');
+    document.body.insertBefore(mainContent, document.body.firstChild);
+
     this.createLandingPage();
     this.initializeBasicElements();
     this.initialize();
@@ -473,8 +498,13 @@ class Website {
    * Method to rebuild the website by removing all elements and starting over
    */
   reBuild() {
-    // remove all elements
-    document.body.innerHTML = '';
+    // remove all elements except the script tag
+    const elements = document.body.children;
+    for (let i = 0; i < elements.length; i++) {
+      if (elements[i].tagName !== 'SCRIPT') {
+        elements[i].remove();
+      }
+    }
     this.startBuilding().then(r => console.log('Rebuilding website...'));
   }
 }
