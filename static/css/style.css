@@ -4,6 +4,11 @@
   --main-accent-color-hover: #429EA6;
   --secondary-background-color: #0C1713;
   --secondary-text-color: #7B435B;
+
+  --hue: 223;
+  --bg: hsl(var(--hue),10%,90%);
+  --fg: hsl(var(--hue),10%,10%);
+  --transDur: 0.15s;
 }
 
 /*! HTML5 Boilerplate v9.0.0-RC1 | MIT License | https://html5boilerplate.com/ */
@@ -106,6 +111,18 @@ body {
 
 footer {
   margin-top: auto;
+}
+
+.user-image {
+  width: auto; /* Set your desired width */
+  height: 300px; /* Set your desired height */
+  object-fit: cover; /* This property ensures the image covers the area without losing its aspect ratio */
+}
+
+.generated-cards:hover {
+  animation: pulse 1s infinite; /* Increase the duration to slow down the animation */
+  animation-delay: 50ms; /* Add a delay before the animation starts */
+  transition: animation 5s ease-in-out;
 }
 
 /* ==========================================================================
