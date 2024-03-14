@@ -14,9 +14,8 @@ class UserGenerator {
   }
 
   generateWord() {
-    const words = ["Blorfingle", "Quizzaciously", "Glimboggle", "Frindleplax", "Whompsifer", "Zyxwuvut", "Plumbusque", "Janklefot", "Vexnop", "Grindlewock", "Thwipthwap", "Crumblebuns", "Snerpderp", "Flinglebop", "Quemp", "Lorpzal", "Vlimshard", "Trinklestomp", "Wuzzlefink", "Ploobadoof", "Glempsort", "Froopledox", "Hurpledurp", "Snorklewoggle", "Blampflarf"]
+    const words = ["Blorfingle", "Quizzaciously", "Glimboggle", "Frindleplax", "Whompsifer", "Zyxwuvut", "Plumbusque", "Janklefot", "Vexnop", "Grindlewock", "Thwipthwap", "Crumblebuns", "Snerpderp", "Flinglebop", "Quemp", "Lorpzal", "Vlimshard", "Trinklestomp", "Wuzzlefink", "Ploobadoof", "Glempsort", "Froopledox", "Hurpledurp", "Snorklewoggle", "Blampflarf", "Shizle", "Glimp", "Froop", "Talert", "Klogged", "Pinkle", "Hashluck", "Blorg", "Snigglewomp", "Qwompa", "Suhneez", "Boab", "Flobbertop", "Fregit"]
     return words[Math.floor(Math.random() * words.length)];
-
   }
 
   generateEmail() {
@@ -494,6 +493,12 @@ class Website {
     this.initialize();
   }
 }
+
+// TODO: Dropdown with all Generated User names.
+// TODO: When a user is selected, display their information in a modal.
+// TODO: Replace Bootstrap Colors with Custom Colors
+// TODO: Normalize Card Heights
+// TODO: Reduce Image Size with Compression
 
 const generateAutomation = () => {
   const USER_COUNT = 15;
