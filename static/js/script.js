@@ -1,18 +1,21 @@
 /**
- * This Class is responsible for generating user data using the Random User Generator API.
+ * This Class is responsible for generating user data.
  */
 class UserGenerator {
-  //TODO: Change from API to a local JSON file?
-  // Or create an Array first/last name and use Math.random() to generate a name?
   constructor() {
     console.log('\nUserGenerator instance created.\n\n');
     this.usersObjArray = []; // Array to hold generated user data
+    this.userNameArray = [];
     this.employeeID = 1; // Unique ID for each user (employee1, employee2, etc.)
-    this.STAFFCOUNT = 3; // Number of staff members
-    this.countStaff = 0; // Counter for staff members
+    this.STAFFCOUNT = 3;
+    this.countStaff = 0;
 
   }
 
+  /**
+   * This method generates a word from an array of random made up words.
+   * @returns {string} -
+   */
   generateWord() {
     const words = ["Blorfingle", "Quizzaciously", "Glimboggle", "Frindleplax", "Whompsifer", "Zyxwuvut", "Plumbusque", "Janklefot", "Vexnop", "Grindlewock", "Thwipthwap", "Crumblebuns", "Snerpderp", "Flinglebop", "Quemp", "Lorpzal", "Vlimshard", "Trinklestomp", "Wuzzlefink", "Ploobadoof", "Glempsort", "Froopledox", "Hurpledurp", "Snorklewoggle", "Blampflarf", "Shizle", "Glimp", "Froop", "Talert", "Klogged", "Pinkle", "Hashluck", "Blorg", "Snigglewomp", "Qwompa", "Suhneez", "Boab", "Flobbertop", "Fregit"]
     return words[Math.floor(Math.random() * words.length)];
@@ -64,7 +67,10 @@ class UserGenerator {
   generateMultipleUsers(count) {
     for (let i = 0; i < count; i++) {
       const user = this.generateUser();
-      if (user) this.usersObjArray.push(user);
+      if (user) {
+        this.usersObjArray.push(user);
+        this.userNameArray.push(user.id);
+      }
     }
   }
 
@@ -88,22 +94,6 @@ class HumanUser {
     this.userName = null;
     this.password = null;
   }
-
-  /**
-   * Confirms that the user has been logged in
-   * @returns - True if the user is logged in, false otherwise
-   */
-  get LoggedInStatus() {
-    return this.isLogged;
-  }
-
-  /**
-   * Confirms that the user is a staff member
-   * @returns - True if the user is a staff member, false otherwise
-   */
-  get isStaffMember() {
-    return this.isStaff;
-  }
 }
 
 /**
@@ -112,7 +102,6 @@ class HumanUser {
 class Website {
   constructor(humanUser, userGenerator) {
     console.log('\nWebsite instance created.\n\n');
-    this.htmlContent = '';
     this.bootstrapModal = null;
     this.humanUser = humanUser;
     this.userGenerator = userGenerator;
@@ -124,8 +113,9 @@ class Website {
   initializeBasicElements() {
     const mainContent = document.getElementById('main-content');
     const navbar = document.createElement('nav');
-    navbar.classList.add('navbar', 'navbar-expand-lg', 'bg-dark');
-    navbar.setAttribute('data-bs-theme', 'dark');
+    navbar.classList.add('navbar', 'navbar-expand-lg');
+    // opacity 50%
+    navbar.style.backgroundColor = 'rgba(0, 180, 216, 0.5)';
 
     navbar.innerHTML = `
    <div class="container-fluid">
@@ -138,7 +128,7 @@ class Website {
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="#">Home</a>
       </ul>
-        <button id="navbar-login-button" class="btn btn-outline-success" type="submit">Login</button>
+        <button id="navbar-login-button" class="btn" type="submit">Login</button>
     </div>
   </div>
     `;
@@ -147,15 +137,23 @@ class Website {
 
     const containerDiv = document.createElement('div');
     containerDiv.classList.add('container');
+    const videoDiv = document.createElement('div');
+    videoDiv.classList.add('video-container');
+    videoDiv.innerHTML = `
+    <video autoplay loop id="myVideo">
+      <source src="../video/backgroundvid.mp4" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
+    `;
+
+    // append to top of html
+    mainContent.appendChild(videoDiv);
+
     const rowDiv = document.createElement('div');
     rowDiv.classList.add('row');
     rowDiv.id = 'card-div';
     containerDiv.appendChild(rowDiv);
-    const cardCarousel = document.createElement('div');
-    cardCarousel.classList.add('card-carousel');
     mainContent.appendChild(containerDiv);
-
-    containerDiv.innerHTML
 
     const footer = document.createElement('footer');
     footer.classList.add('bg-dark', 'text-center', 'text-white', 'py-3');
@@ -189,8 +187,14 @@ class Website {
     landingPage.classList.add('container', 'd-flex', 'flex-column', 'align-items-center', 'justify-content-center', 'min-vh-100');
     landingPage.id = 'landing-page';
     landingPage.innerHTML = `
-      <h1 class="display-1">Welcome to our website!</h1>
-<!--      <button id="splash-page-login-button" class="btn btn-primary">Login</button>-->
+      <div id="" class="landing-page-content text-center animate__animated animate__rubberBand animate__infinite animate__slower">
+        <h1 class="display-1">Ocean Fried Chicken<h1>
+        <h3>Dive into our ocean of content – it's a shore thing you'll love it!</h3>
+      </div>
+      <div class="landing-page-content mt-5">
+        <p class="lead">Please log in to continue.</p>
+        <button id="landing-page-button" type="button" class="btn">Login</button>
+      </div>
     `;
 
     mainContainer.prepend(landingPage);
@@ -237,7 +241,7 @@ class Website {
                                 </svg>
                             </span>
                             <input type="text" class="form-control" id="first-name" placeholder="Enter your first name..."
-                                   required pattern="^[A-Za-z]+$" value="JNelson">
+                                   required pattern="^[A-Za-z0-9]+$" value="JNelson">
                             <div class="valid-feedback text-center">Valid.</div>
                             <div class="invalid-feedback text-center">Please fill out this field.</div>
                         </div>
@@ -250,7 +254,7 @@ class Website {
                                   <path d="M6.25 11.745v-1.418l1.204 1.375.261.524a.8.8 0 0 1-.12.231l-2.5 3.25a.75.75 0 1 1-1.19-.914zm4.22-4.215-.494-.494.205-1.843.006-.067 1.124 1.124h1.44a.75.75 0 0 1 0 1.5H11a.75.75 0 0 1-.531-.22Z"/>
                                 </svg>
                             </span>
-                            <input type="text" class="form-control" id="last-name" placeholder="Enter your last name..."
+                            <input type="password" class="form-control" id="last-name" placeholder="Enter your last name..."
                                    required pattern="^[A-Za-z]+$" value="JNelson">
                             <div class="valid-feedback text-center">Valid.</div>
                             <div class="invalid-feedback text-center">Please fill out this field.</div>
@@ -259,9 +263,14 @@ class Website {
                     <div class="d-flex flex-column justify-content-center mb-3" id="login-response">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="login-submit-button">Submit</button>
-                        <button type="button" class="btn btn-warning" data-bs-dismiss="modal" id="admin-override">Admin Override</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-modal-button">Close</button>
+                        <button type="button" class="btn modal-buttons" data-bs-dismiss="modal" id="login-submit-button">Submit</button>
+                        <button type="button" class="btn modal-buttons" data-bs-dismiss="modal" id="admin-override">Admin Override</button>
+                        <button type="button" class="btn modal-buttons" data-bs-dismiss="modal" id="close-modal-button">Close</button>
+                        <div>
+                        <select id="names-dropdown">
+                            <option value="0">Select a User</option>
+                        </select>
+                          </div>
                     </div>
                 </div>
             </div>
@@ -280,16 +289,16 @@ class Website {
 
     let htmlContent = `
         <div class="col-md-4 my-5 mx-auto generated-cards">
-          <div class="card shadow-md">
+          <div class="card shadow-md specific-cards">
             <img src="${generatedUser.picture}" class="card-img-top img-fluid user-image" alt="User Image #${generatedUser.id}">
             <div class="card-body">
               <ul class="list-group list-group-flush">
                 <li class="list-group-item"><h5 class="card-title text-center">${generatedUser.firstName} ${generatedUser.lastName}</h5></li>
-                <li class="list-group-item"><p class="card-text"><span class="fw-bold text-success">Username:</span> ${generatedUser.userName}</p></li>
-                <li class="list-group-item"><p class="card-text"><a href="mailto:${generatedUser.email}">${generatedUser.email}</a></p></li>
-                <li class="list-group-item"><p class="card-text"><span class="fw-bold">Date of Birth:</span> ${generatedUser.dateOfBirth}</p></li>
-                ${this.humanUser.isStaff ? `<li class="list-group-item is-staff"><p class="card-text is-staff"><span class="fw-bold text-success">Staff Member:</span> <span class="text-decoration-underline text-danger fw-bolder">${generatedUser.isStaff ? 'Yes' : 'No'}</span></p></li>` : ''}
-                ${generatedUser.isStaff ? `<li class="list-group-item"><p class="card-text"><span class="fw-bold text-success">Department:</span> ${generatedUser.department}</p></li>` : ''}
+                <li class="list-group-item"><p class="card-text"><span class="fw-bold card-user-header">Username:</span> ${generatedUser.userName}</p></li>
+                <li class="list-group-item"><p class="card-text"><span class="fw-bold card-user-header">Contact: </span><a href="mailto:${generatedUser.email}">${generatedUser.email}</a></p></li>
+                <li class="list-group-item"><p class="card-text"><span class="fw-bold  card-user-header">Date of Birth:</span> ${generatedUser.dateOfBirth}</p></li>
+                ${this.humanUser.isStaff ? `<li class="list-group-item is-staff"><p class="card-text is-staff"><span class="fw-bold  card-user-header">Staff Member:</span> <span class="text-decoration-underline text-danger fw-bolder">${generatedUser.isStaff ? 'Yes' : 'No'}</span></p></li>` : ''}
+                ${generatedUser.isStaff ? `<li class="list-group-item"><p class="card-text"><span class="fw-bold  card-user-header">Department:</span> ${generatedUser.department}</p></li>` : ''}
               </ul>
             </div>
             <div class="staff-button-div mx-auto">
@@ -310,7 +319,7 @@ class Website {
 
     for (const staffButton of staffButtonDiv) {
       const button = document.createElement('button');
-      button.classList.add('btn', 'btn-warning', 'staff-button', 'mb-3', 'animate__flash', 'animate__delay-2s', 'animate__slow', 'animate__infinite', 'animate__animated');
+      button.classList.add('btn', 'staff-button', 'mb-3', 'animate__flash', 'animate__delay-2s', 'animate__slow', 'animate__infinite', 'animate__animated');
       button.textContent = 'Delete User';
       button.id = `staff-button-${increment++}`;
       staffButton.appendChild(button);
@@ -351,12 +360,10 @@ class Website {
    */
   deleteUser(event) {
     // TODO: Maybe add a div to confirm the deletion?
-    console.log('Deleting user... ', event.id);
 
     const card = event.closest('.generated-cards');
 
     if (card.querySelector('.is-staff').textContent.includes('Yes')) {
-      console.log("You can't delete a staff member.");
       alert("You can't delete a staff member.");
     } else {
       card.remove();
@@ -369,23 +376,29 @@ class Website {
    */
   controlLoginButton() {
     const navBarButton = document.getElementById('navbar-login-button');
-    const adminOverrideButton = document.getElementById('admin-override');
     const parentElement = navBarButton.parentElement;
+    const landingPageButton = document.getElementById('landing-page-button');
+
+
 
     if (this.humanUser.isLogged) {
       const newButton = document.createElement('button');
       newButton.textContent = 'Logout';
       newButton.id = 'navbar-login-button';
-      newButton.classList.add('btn', 'btn-outline-danger');
+      newButton.classList.add('btn');
 
       newButton.addEventListener('click', () => this.logoutUser());
 
       // Replace the old button with the new one
       parentElement.replaceChild(newButton, navBarButton);
+
+      // print out the button
+      console.log(newButton);
     } else {
       navBarButton.textContent = 'Login';
       navBarButton.removeEventListener('click', () => this.logoutUser());
       navBarButton.addEventListener('click', () => this.loginUser());
+      landingPageButton.addEventListener('click', () => this.loginUser());
     }
 
 
@@ -395,7 +408,6 @@ class Website {
    * Method to log in the user
    */
   loginUser() {
-    //TODO: Clean up the end of this method, the logic is a bit convoluted
     this.humanUser.isLogged = true;
     this.bootstrapModal = new bootstrap.Modal(document.getElementById('login-modal'));
     this.bootstrapModal.show();
@@ -405,25 +417,35 @@ class Website {
     const submitButton = document.getElementById('login-submit-button');
     const adminOverride = document.getElementById('admin-override');
 
+    // first 3 users are staff, create an array
+    let staffIDArray = [];
+    for (const generatedUser of this.userGenerator.allUsers) {
+      if (generatedUser.isStaff) {
+        staffIDArray.push(generatedUser.id);
+      }
+    }
+
+    // if the dropdown value is in the staffIDArray then the user is staff
+    let dropdown = document.getElementById('names-dropdown');
+    dropdown.addEventListener('change', (event) => {
+      this.humanUser.isStaff = staffIDArray.includes(parseInt(event.target.value));
+    });
+
     submitButton.addEventListener('click', (e) => {
       e.preventDefault();
       if (form.checkValidity()) {
-        console.log('Form is valid via loginUser().');
         this.humanUser.isLogged = true;
         this.controlLoginButton();
         this.bootstrapModal.hide();
 
         if (login.value === 'superuser') {
-          console.log('Superuser logged in via loginUser()');
           this.humanUser.isStaff = true;
         } else {
-          console.log('User logged in via loginUser().');
         }
       } else {
-        console.log('Form is invalid.');
+        alert('Form is invalid.');
       }
 
-      console.log('Is the user staff?', this.humanUser.isStaff);
       if (this.humanUser.isStaff) {
         for (const generatedUser of this.userGenerator.allUsers) {
           this.generateCard(generatedUser); // Generates a card for the user// Adds a "Staff" button to the user's card
@@ -473,10 +495,9 @@ class Website {
    * Method to log out the user
    */
   logoutUser() {
-    console.log('Logging out...');
     this.humanUser.isLogged = false;
     this.humanUser.isStaff = false;
-    document.body.innerHTML = document.body.innerHTML.match(/<script[^>]*>[\s\S]*?<\/script>/g).join('');
+    document.body.innerHTML = document.body.innerHTML.match(/<(script|video)[^>]*>[\s\S]*?<\/(script|video)>/g).join('');
     this.startBuilding();
   }
 
@@ -491,14 +512,19 @@ class Website {
     this.createLandingPage();
     this.initializeBasicElements();
     this.initialize();
+
+    // get users
+    let generatedUsers = this.userGenerator.allUsers;
+    let staffIDArray = [];
+    for (const user of generatedUsers) {
+      const employeeID = user.id;
+      if (user.isStaff) {
+        staffIDArray.push(employeeID);
+      }
+      fillDropdown(employeeID, staffIDArray);
+    }
   }
 }
-
-// TODO: Dropdown with all Generated User names.
-// TODO: When a user is selected, display their information in a modal.
-// TODO: Replace Bootstrap Colors with Custom Colors
-// TODO: Normalize Card Heights
-// TODO: Reduce Image Size with Compression
 
 const generateAutomation = () => {
   const USER_COUNT = 15;
@@ -509,6 +535,38 @@ const generateAutomation = () => {
 
   website.startBuilding();
   userGenerator.generateMultipleUsers(USER_COUNT);
+
+  let generatedUsers = userGenerator.allUsers;
+  let staffIDArray = [];
+  for (const user of generatedUsers) {
+    const employeeID = user.id;
+    if (user.isStaff) {
+      staffIDArray.push(employeeID);
+    }
+    fillDropdown(employeeID, staffIDArray);
+  }
+}
+
+const fillDropdown = (employeeID, staffIDArray) => {
+  let dropdown = document.getElementById('names-dropdown');
+  let option = document.createElement('option');
+
+  if (staffIDArray.includes(employeeID)) {
+    option.text = `Employee ${employeeID} (Staff)`;
+  } else {
+    option.text = `Employee ${employeeID}`;
+  }
+
+  option.value = employeeID;
+
+  dropdown.add(option);
+
+  addEventListener('change', (event) => {
+    const userNameInput = document.getElementById('first-name');
+    const passwordInput = document.getElementById('last-name');
+    userNameInput.value = `employee${event.target.value}`;
+    passwordInput.value = `password`;
+  });
 }
 
 generateAutomation();
