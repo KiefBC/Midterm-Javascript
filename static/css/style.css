@@ -1,56 +1,38 @@
 :root {
   --main-background-color: #273E47;
-  --main-text-color: #F3EFE0;
+  --main-text-color: #284b63;
+  --hover: #F3EFE0;
+  --secondary: #d9d9d9;
   --main-accent-color-hover: #429EA6;
   --secondary-background-color: #0C1713;
   --secondary-text-color: #7B435B;
-
-  --hue: 223;
-  --bg: hsl(var(--hue),10%,90%);
-  --fg: hsl(var(--hue),10%,10%);
-  --transDur: 0.15s;
+  --danger: #e9c46a;
+  --warning: #f4a261;
+  --card-bg: rgba(202, 240, 248, 0.7);
+  --card-headers: #344e41;
+  --modal-rgba: rgba(255, 255, 255, 0.75);
+  --navbar-background: #00b4d8;
 }
 
-/*! HTML5 Boilerplate v9.0.0-RC1 | MIT License | https://html5boilerplate.com/ */
-
-/* main.css 3.0.0 | MIT License | https://github.com/h5bp/main.css#readme */
-/*
- * What follows is the result of much research on cross-browser styling.
- * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
- * Kroc Camen, and the H5BP dev community and team.
- */
-
-/* ==========================================================================
-   Base styles: opinionated defaults
-   ========================================================================== */
-
-html {
-  color: #222;
-  font-size: 1em;
-  line-height: 1.4;
+.card-user-header {
+  /*background: var(--card-bg);*/
+  color: var(--card-headers);
 }
 
-/*
- * Remove text-shadow in selection highlight:
- * https://twitter.com/miketaylr/status/12228805301
- *
- * Customize the background color to match your design.
- */
-
-::-moz-selection {
-  background: #b3d4fc;
-  text-shadow: none;
+.specific-cards {
+  background: var(--card-bg);
+  color: var(--main-text-color);
+  border: 1px solid var(--main-text-color);
 }
 
-::selection {
-  background: #b3d4fc;
-  text-shadow: none;
+li.list-group-item {
+  background: var(--card-bg);
+  color: var(--main-text-color);
 }
 
 /*
  * A better looking default horizontal rule
  */
-
 hr {
   display: block;
   height: 1px;
@@ -60,53 +42,59 @@ hr {
   padding: 0;
 }
 
-/*
- * Remove the gap between audio, canvas, iframes,
- * images, videos and the bottom of their containers:
- * https://github.com/h5bp/html5-boilerplate/issues/440
- */
-
-audio,
-canvas,
-iframe,
-img,
-svg,
-video {
-  vertical-align: middle;
-}
-
-/*
- * Remove default fieldset styles.
- */
-
-fieldset {
-  border: 0;
-  margin: 0;
-  padding: 0;
-}
-
-/*
- * Allow only vertical resizing of textareas.
- */
-
-textarea {
-  resize: vertical;
-}
-
-/* ==========================================================================
-   Author's custom styles
-   ========================================================================== */
-
 body {
   background-color: var(--main-background-color);
   color: var(--main-text-color);
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
+  display: flex;
   margin: 0;
   padding: 0;
-  display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100%;
+}
+
+input[type="text"], input[type="password"] {
+  background: var(--secondary);
+  color: var(--secondary-text-color);
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+  background: var(--secondary);
+}
+
+.generated-cards.card {
+  background: var(--card-bg);
+  color: var(--main-text-color);
+  border: 1px solid var(--main-text-color);
+}
+
+#myVideo {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  z-index: -100;
+  object-fit: cover;
+}
+
+.modal-buttons {
+  background: var(--secondary);
+  color: var(--main-text-color);
+}
+
+.modal-buttons:hover {
+  background: var(--main-accent-color-hover);
+}
+
+#navbar-login-button {
+  background: var(--secondary);
+  color: var(--main-text-color);
+}
+
+#navbar-login-button:hover {
+  background: var(--main-accent-color-hover);
 }
 
 footer {
@@ -125,164 +113,49 @@ footer {
   transition: animation 5s ease-in-out;
 }
 
-/* ==========================================================================
-   Helper classes
-   ========================================================================== */
-
-/*
- * Hide visually and from screen readers
- */
-
-.hidden,
-[hidden] {
-  display: none !important;
+#admin-override  {
+  background: var(--danger);
+  color: var(--secondary-text-color);
 }
 
-/*
- * Hide only visually, but have it available for screen readers:
- * https://snook.ca/archives/html_and_css/hiding-content-for-accessibility
- *
- * 1. For long content, line feeds are not interpreted as spaces and small width
- *    causes content to wrap 1 word per line:
- *    https://medium.com/@jessebeach/beware-smushed-off-screen-accessible-text-5952a4c2cbfe
- */
-
-.visually-hidden {
-  border: 0;
-  clip: rect(0, 0, 0, 0);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  white-space: nowrap;
-  width: 1px;
-  /* 1 */
+.staff-button {
+  background: var(--danger);
+  color: var(--main-text-color);
 }
 
-/*
- * Extends the .visually-hidden class to allow the element
- * to be focusable when navigated to via the keyboard:
- * https://www.drupal.org/node/897638
- */
-
-.visually-hidden.focusable:active,
-.visually-hidden.focusable:focus {
-  clip: auto;
-  height: auto;
-  margin: 0;
-  overflow: visible;
-  position: static;
-  white-space: inherit;
-  width: auto;
+.staff-button:hover {
+  background: var(--warning);
 }
 
-/*
- * Hide visually and from screen readers, but maintain layout
- */
-
-.invisible {
-  visibility: hidden;
+#admin-override:hover {
+  background: var(--warning);
 }
 
-/*
- * Clearfix: contain floats
- *
- * The use of `table` rather than `block` is only necessary if using
- * `::before` to contain the top-margins of child elements.
- */
-
-.clearfix::before,
-.clearfix::after {
-  content: "";
-  display: table;
+.navbar {
+  background-color: var(--navbar-background);
 }
 
-.clearfix::after {
-  clear: both;
+.modal-content {
+  background-color: var(--modal-rgba);
 }
 
-/* ==========================================================================
-   EXAMPLE Media Queries for Responsive Design.
-   These examples override the primary ('mobile first') styles.
-   Modify as content requires.
-   ========================================================================== */
-
-@media only screen and (min-width: 35em) {
-  /* Style adjustments for viewports that meet the condition */
+/* rounded corner black 65% opacity background for landing-page text content */
+.landing-page-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.65);
+  color: white;
+  border-radius: 10px;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
-@media print,
-  (-webkit-min-device-pixel-ratio: 1.25),
-  (min-resolution: 1.25dppx),
-  (min-resolution: 120dpi) {
-  /* Style adjustments for high resolution devices */
+#landing-page-button {
+  background: var(--secondary);
+  color: var(--main-text-color);
 }
 
-/* ==========================================================================
-   Print styles.
-   Inlined to avoid the additional HTTP request:
-   https://www.phpied.com/delay-loading-your-print-css/
-   ========================================================================== */
-
-@media print {
-  *,
-  *::before,
-  *::after {
-    background: #fff !important;
-    color: #000 !important;
-    /* Black prints faster */
-    box-shadow: none !important;
-    text-shadow: none !important;
-  }
-
-  a,
-  a:visited {
-    text-decoration: underline;
-  }
-
-  a[href]::after {
-    content: " (" attr(href) ")";
-  }
-
-  abbr[title]::after {
-    content: " (" attr(title) ")";
-  }
-
-  /*
-   * Don't show links that are fragment identifiers,
-   * or use the `javascript:` pseudo protocol
-   */
-  a[href^="#"]::after,
-  a[href^="javascript:"]::after {
-    content: "";
-  }
-
-  pre {
-    white-space: pre-wrap !important;
-  }
-
-  pre,
-  blockquote {
-    border: 1px solid #999;
-    page-break-inside: avoid;
-  }
-
-  tr,
-  img {
-    page-break-inside: avoid;
-  }
-
-  p,
-  h2,
-  h3 {
-    orphans: 3;
-    widows: 3;
-  }
-
-  h2,
-  h3 {
-    page-break-after: avoid;
-  }
+#landing-page-button:hover {
+  background: var(--main-accent-color-hover);
 }
-
