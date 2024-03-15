@@ -1,11 +1,24 @@
 /**
+ * I had a lot of fun doing this Midterm. I hope you enjoy it as much as I did. I spent a lot of time thinking how I wanted to do it. So I went with what I think is a weird design. I decided to try and make a site that built itself based on the users interactions with it.
+ * I think it does just that. All the user would see in the HTML is a blank file. But once the website is loaded its filled and fully functional.
+ *
+ * I also wanted to make it so that the user could interact with the site and it would change based on the users interactions. I think I did that as well.
+ * I ended up making a bunch of words and generate them together using some basic month to try and get unique names and content. I think the names are quite funny for what they are. No the users faces you see are not real people, they are fake as heck!
+ *
+ * I learned quite a bit from this. I also learned a bit more about how to interact with Bootstrap using strictly Javascript.
+ *
+ * I don't know what Ocean Fried Chicken is like, but It makes me feel uneasy. I hope you enjoy the site.
+ *
+ * I also hate choosing colors. FYI!!!!!!!!
+ */
+
+/**
  * This Class is responsible for generating user data.
  */
 class UserGenerator {
   constructor() {
     console.log('\nUserGenerator instance created.\n\n');
     this.usersObjArray = []; // Array to hold generated user data
-    this.userNameArray = [];
     this.employeeID = 1; // Unique ID for each user (employee1, employee2, etc.)
     this.STAFFCOUNT = 3;
     this.countStaff = 0;
@@ -13,21 +26,29 @@ class UserGenerator {
   }
 
   /**
-   * This method generates a word from an array of random made up words.
-   * @returns {string} -
+   * Method to generate a random word
+   * @returns {string} - A random word
    */
   generateWord() {
     const words = ["Blorfingle", "Quizzaciously", "Glimboggle", "Frindleplax", "Whompsifer", "Zyxwuvut", "Plumbusque", "Janklefot", "Vexnop", "Grindlewock", "Thwipthwap", "Crumblebuns", "Snerpderp", "Flinglebop", "Quemp", "Lorpzal", "Vlimshard", "Trinklestomp", "Wuzzlefink", "Ploobadoof", "Glempsort", "Froopledox", "Hurpledurp", "Snorklewoggle", "Blampflarf", "Shizle", "Glimp", "Froop", "Talert", "Klogged", "Pinkle", "Hashluck", "Blorg", "Snigglewomp", "Qwompa", "Suhneez", "Boab", "Flobbertop", "Fregit"]
     return words[Math.floor(Math.random() * words.length)];
   }
 
+  /**
+   * Method to generate a random email
+   * @returns {string} - A random email
+   */
   generateEmail() {
-    let emailEndingList = ["gestout", "veleodka", "novidnectar", "gwenrog", "temetonic", "kaermorhe", "dimeritiumht",]
+    let emailEndingList = ["gestout", "veleodka", "novidnectar", "gwenrog", "temetonic", "kaermorhe", "dimeritiumht"]
     let emailHandle = this.generateWord().toLowerCase();
     let emailEnding = emailEndingList[Math.floor(Math.random() * emailEndingList.length)];
     return `${emailHandle}@${emailEnding}.com`;
   }
 
+  /**
+   * Method to generate a random username
+   * @returns {string} - A random username
+   */
   generateUsername () {
     return this.generateWord().toLowerCase();
   }
@@ -39,12 +60,12 @@ class UserGenerator {
   randomPhoto() {
     const numberOfPhotos = 14; // For example, if you have 10 photos in your folder
     const photoIndex = Math.floor(Math.random() * numberOfPhotos) + 1; // to get a number between 1 and numberOfPhotos
-    return `/static/img/user${photoIndex}.jpg`; // Adjust the path as per your project structure
+    return `/static/img/user${photoIndex}.jpg`;
   }
 
   /**
-   * Method to generate a single user
-   * @returns - A user object
+   * Method to generate a user
+   * @returns {{firstName: string, lastName: string, isStaff: boolean, dateOfBirth: string, id: number, userName: string, department: string, email: string, picture: string}} - A user object
    */
   generateUser() {
     return {
@@ -53,8 +74,10 @@ class UserGenerator {
     lastName: this.generateWord(),
     userName: this.generateUsername(),
     email: this.generateEmail(),
+    // A date format that is compatible with the HTML date input
     dateOfBirth: new Date().toISOString().slice(0, 10),
     picture: this.randomPhoto(),
+    // 3 staff members
     isStaff: this.countStaff++ < this.STAFFCOUNT,
     department: this.generateWord(),
     };
@@ -67,16 +90,16 @@ class UserGenerator {
   generateMultipleUsers(count) {
     for (let i = 0; i < count; i++) {
       const user = this.generateUser();
+      // If the user is successfully generated, add it to the array
       if (user) {
         this.usersObjArray.push(user);
-        this.userNameArray.push(user.id);
       }
     }
   }
 
   /**
-   * Getter method to return all users
-   * @returns - An array of user objects
+   * Getter to return all users
+   * @returns {[]} - An array of user objects
    */
   get allUsers() {
     return this.usersObjArray;
@@ -91,8 +114,6 @@ class HumanUser {
     console.log('\nHumanUser instance created.\n\n');
     this.isLogged = false;
     this.isStaff = false;
-    this.userName = null;
-    this.password = null;
   }
 }
 
@@ -108,13 +129,14 @@ class Website {
   }
 
   /**
-   * Method to initialize the basic elements of the website
+   * Method to initialize the basic elements of the website.
+   * This includes the navbar, video background, and footer.
+   * It also creates a container for the user cards.
    */
   initializeBasicElements() {
     const mainContent = document.getElementById('main-content');
     const navbar = document.createElement('nav');
     navbar.classList.add('navbar', 'navbar-expand-lg');
-    // opacity 50%
     navbar.style.backgroundColor = 'rgba(0, 180, 216, 0.5)';
 
     navbar.innerHTML = `
@@ -132,23 +154,25 @@ class Website {
     </div>
   </div>
     `;
-
+    // append to top of html
     document.body.prepend(navbar);
 
+    // create a container for the video
     const containerDiv = document.createElement('div');
     containerDiv.classList.add('container');
     const videoDiv = document.createElement('div');
     videoDiv.classList.add('video-container');
     videoDiv.innerHTML = `
     <video autoplay loop id="myVideo">
-      <source src="../video/backgroundvid.mp4" type="video/mp4">
+      <source src="static/video/backgroundvid.mp4" type="video/mp4">
       Your browser does not support HTML5 video.
     </video>
     `;
 
-    // append to top of html
+    // append video to the container
     mainContent.appendChild(videoDiv);
 
+    // append container to the main content
     const rowDiv = document.createElement('div');
     rowDiv.classList.add('row');
     rowDiv.id = 'card-div';
@@ -169,23 +193,22 @@ class Website {
     const loginModal = document.createElement('div');
     loginModal.classList.add('modal', 'fade');
     loginModal.id = 'login-modal';
-    loginModal.setAttribute('tabindex', '-1');
-    loginModal.setAttribute('aria-labelledby', 'login-user-modal');
-    loginModal.setAttribute('aria-hidden', 'true');
 
     // append after the navbar
     navbar.parentNode.insertBefore(loginModal, navbar.nextSibling);
   }
 
   /**
-   * This is the first thing the user sees when they visit the website.
-   * A modal will pop up and ask the user to log in.
+   * Method to create a landing page.
+   * This is the first page the user sees when they visit the website.
+   * It contains a welcome message and a login button.
    */
   createLandingPage() {
     const mainContainer = document.getElementById('main-content');
     const landingPage = document.createElement('div');
     landingPage.classList.add('container', 'd-flex', 'flex-column', 'align-items-center', 'justify-content-center', 'min-vh-100');
     landingPage.id = 'landing-page';
+
     landingPage.innerHTML = `
       <div id="" class="landing-page-content text-center animate__animated animate__rubberBand animate__infinite animate__slower">
         <h1 class="display-1">Ocean Fried Chicken<h1>
@@ -197,27 +220,30 @@ class Website {
       </div>
     `;
 
+    // append to the top of the main content div
     mainContainer.prepend(landingPage);
   }
 
   /**
-   * Method to initialize the login process.
-   * It creates a modal and listens for a click event on the login button.
+   * Method to initialize the website.
+   * This includes creating a modal for the login form.
+   * It also controls the login button.
    */
   initialize() {
     const modalDialog = document.querySelector('.modal-dialog');
-
-    this.controlLoginButton();
 
     // Ensure modal is only created once
     if (!modalDialog) {
       this.createLoginModal();
     }
+
+    this.controlLoginButton();
   }
 
   /**
-   * Method to create a modal.
-   * That is, a form for user to login.
+   * Method to create a login modal.
+   * This modal will be used to log in the user.
+   * It will also contain a dropdown to select a user.
    */
   createLoginModal() {
     const modal = document.getElementById('login-modal');
@@ -277,12 +303,13 @@ class Website {
         </div>
         `;
 
+    // append after the navbar and before the video (next sibling)
     navbar.parentNode.insertBefore(modal, navbar.nextSibling);
   }
 
   /**
-   * Method to generate a user card
-   * @param generatedUser - A user object
+   * Method to generate a card for a user using their data
+   * @param generatedUser - The user to generate a card for
    */
   generateCard(generatedUser) {
     const cardContainer = document.getElementById('card-div');
@@ -297,7 +324,7 @@ class Website {
                 <li class="list-group-item"><p class="card-text"><span class="fw-bold card-user-header">Username:</span> ${generatedUser.userName}</p></li>
                 <li class="list-group-item"><p class="card-text"><span class="fw-bold card-user-header">Contact: </span><a href="mailto:${generatedUser.email}">${generatedUser.email}</a></p></li>
                 <li class="list-group-item"><p class="card-text"><span class="fw-bold  card-user-header">Date of Birth:</span> ${generatedUser.dateOfBirth}</p></li>
-                ${this.humanUser.isStaff ? `<li class="list-group-item is-staff"><p class="card-text is-staff"><span class="fw-bold  card-user-header">Staff Member:</span> <span class="text-decoration-underline text-danger fw-bolder">${generatedUser.isStaff ? 'Yes' : 'No'}</span></p></li>` : ''}
+                ${this.humanUser.isStaff ? `<li class="list-group-item is-staff"><p class="card-text is-staff"><span class="fw-bold  card-user-header">Staff Member:</span> <span class="text-decoration-underline fw-bolder">${generatedUser.isStaff ? 'Yes' : 'No'}</span></p></li>` : ''}
                 ${generatedUser.isStaff ? `<li class="list-group-item"><p class="card-text"><span class="fw-bold  card-user-header">Department:</span> ${generatedUser.department}</p></li>` : ''}
               </ul>
             </div>
@@ -307,16 +334,19 @@ class Website {
         </div>
     `;
 
+    // Append the card to the card container
     cardContainer.innerHTML += htmlContent;
   }
 
   /**
-   * This will be used to add a button to the card if the user is a staff member
+   * Method to add a "Staff" button to the user's card
+   * This button will only be added if the user is a staff member
    */
   addStaffButton() {
     const staffButtonDiv = document.querySelectorAll('.staff-button-div');
-    let increment = 0;
+    let increment = 0; // Increment to give each button a unique ID
 
+    // Add a "Staff" button to each user's card
     for (const staffButton of staffButtonDiv) {
       const button = document.createElement('button');
       button.classList.add('btn', 'staff-button', 'mb-3', 'animate__flash', 'animate__delay-2s', 'animate__slow', 'animate__infinite', 'animate__animated');
@@ -328,41 +358,49 @@ class Website {
     const staffButtons = document.querySelectorAll('.staff-button');
     staffButtons.forEach((staffButton) => {
       staffButton.addEventListener('click', (event) => {
-        this.deleteUser(event.target);
+        this.deleteUser(event.target); // target being the button
       });
     });
   }
 
   /**
-   * Method to remove the splash page once the user logs in
+   * Method to remove the splash page
+   * This will be called when the user logs in
+   * It will remove the splash page and animate the user cards
    */
   removeSplashPage() {
-    // Remove the splash page
     const splashPage = document.getElementById('landing-page');
-    splashPage.classList.add('animate__animated', 'animate__fadeOut');
+    splashPage.classList.add('animate__animated', 'animate__fadeOut'); // Animate the splash page removal
+
+    // Remove the splash page after the animation ends
     splashPage.addEventListener('animationend', () => {
       splashPage.remove();
 
+      // Animate the user cards after the splash page is removed
       const elementsToAnimate = document.querySelectorAll('.generated-cards');
       elementsToAnimate.forEach((element) => {
         element.classList.add('animate__animated', 'animate__fadeIn');
       });
+
+      // Remove the animation that used to FadeIn the cards after 1 seconds
       setTimeout(() => {
         elementsToAnimate.forEach((element) => {
           element.classList.remove('animate__fadeIn');
         });
-      }, 2000);
+      }, 1000);
     });
   }
 
   /**
-   * This method will delete users from the website via the Staff button
+   * Method to delete a user
+   * This will be called when the user clicks the "Delete User" button on a user's card
+   * @param event - The event that triggered the method, in this case, the button click
    */
   deleteUser(event) {
-    // TODO: Maybe add a div to confirm the deletion?
-
+    // Get the card that the button is on
     const card = event.closest('.generated-cards');
 
+    // If the user is a staff member, they can't delete themselves or other staff members
     if (card.querySelector('.is-staff').textContent.includes('Yes')) {
       alert("You can't delete a staff member.");
     } else {
@@ -372,7 +410,8 @@ class Website {
 
   /**
    * Method to control the login button
-   * It will change the button text and functionality based on the user's login status
+   * This will change the login button to a logout button if the user is logged in
+   * It will also add an event listener to the login button
    */
   controlLoginButton() {
     const navBarButton = document.getElementById('navbar-login-button');
@@ -380,7 +419,7 @@ class Website {
     const landingPageButton = document.getElementById('landing-page-button');
 
 
-
+    // If the user is logged in, change the button to a logout button
     if (this.humanUser.isLogged) {
       const newButton = document.createElement('button');
       newButton.textContent = 'Logout';
@@ -389,12 +428,13 @@ class Website {
 
       newButton.addEventListener('click', () => this.logoutUser());
 
-      // Replace the old button with the new one
+      /*
+      Replace the old button with the new button
+      This is a necessary workaround for an issue I had with the button not updating
+       */
       parentElement.replaceChild(newButton, navBarButton);
-
-      // print out the button
-      console.log(newButton);
     } else {
+      // If the user is not logged in, change the button to a login button
       navBarButton.textContent = 'Login';
       navBarButton.removeEventListener('click', () => this.logoutUser());
       navBarButton.addEventListener('click', () => this.loginUser());
@@ -406,18 +446,26 @@ class Website {
 
   /**
    * Method to log in the user
+   * This will be called when the user clicks the login button
+   * It will also create user cards and remove the splash page,
+   * add a "Staff" button to the user's card if the user is a staff member,
+   * and also add a "Refresh Users" button to the navbar if the user is a staff member
    */
   loginUser() {
     this.humanUser.isLogged = true;
+    /*
+    Create a modal using Bootstrap JavaScript
+    https://getbootstrap.com/docs/5.3/getting-started/javascript/
+    I kind of like this approach
+     */
     this.bootstrapModal = new bootstrap.Modal(document.getElementById('login-modal'));
     this.bootstrapModal.show();
 
     const form = document.getElementById('login-form');
-    const login = document.getElementById('first-name');
     const submitButton = document.getElementById('login-submit-button');
     const adminOverride = document.getElementById('admin-override');
 
-    // first 3 users are staff, create an array
+    // Create an array of staff IDs
     let staffIDArray = [];
     for (const generatedUser of this.userGenerator.allUsers) {
       if (generatedUser.isStaff) {
@@ -433,30 +481,38 @@ class Website {
 
     submitButton.addEventListener('click', (e) => {
       e.preventDefault();
+
       if (form.checkValidity()) {
         this.humanUser.isLogged = true;
         this.controlLoginButton();
         this.bootstrapModal.hide();
 
-        if (login.value === 'superuser') {
-          this.humanUser.isStaff = true;
-        } else {
-        }
       } else {
         alert('Form is invalid.');
       }
 
       if (this.humanUser.isStaff) {
+        const navbarButton = document.getElementById('navbar-login-button');
+        const refreshButton = document.createElement('button');
+        refreshButton.textContent = 'Refresh Users';
+        refreshButton.classList.add('btn', 'mx-2');
+        refreshButton.id = 'refresh-button';
+        navbarButton.parentNode.insertBefore(refreshButton, navbarButton.nextSibling);
+
+        refreshButton.addEventListener('click', () => this.refreshCards());
+
+        // Create a card for each user
         for (const generatedUser of this.userGenerator.allUsers) {
           this.generateCard(generatedUser); // Generates a card for the user// Adds a "Staff" button to the user's card
         }
         this.addStaffButton();
       } else {
+        // If the first user is not staff, generate a card for them
         let standardUser = this.userGenerator.allUsers[0];
         if (!standardUser.isStaff) {
           this.generateCard(standardUser);
         } else {
-          // print the first user that is not staff
+          // If the first user is staff, generate a card for the next user that is not staff
           for (const generatedUser of this.userGenerator.allUsers) {
             if (!generatedUser.isStaff) {
               this.generateCard(generatedUser);
@@ -483,6 +539,16 @@ class Website {
       this.bootstrapModal.hide();
       this.controlLoginButton();
       this.removeSplashPage();
+
+      const navbarButton = document.getElementById('navbar-login-button');
+      const refreshButton = document.createElement('button');
+      refreshButton.textContent = 'Refresh Users';
+      refreshButton.classList.add('btn', 'mx-2');
+      refreshButton.id = 'refresh-button';
+      navbarButton.parentNode.insertBefore(refreshButton, navbarButton.nextSibling);
+
+      refreshButton.addEventListener('click', () => this.refreshCards());
+
       for (const generatedUser of this.userGenerator.allUsers) {
         this.generateCard(generatedUser);
       }
@@ -493,16 +559,25 @@ class Website {
 
   /**
    * Method to log out the user
+   * This will be called when the user clicks the logout button
+   * It will then rebuild the website
    */
   logoutUser() {
+    // Reset the user's login status
     this.humanUser.isLogged = false;
     this.humanUser.isStaff = false;
+
+    // Remove all content except for the video and the scripts
     document.body.innerHTML = document.body.innerHTML.match(/<(script|video)[^>]*>[\s\S]*?<\/(script|video)>/g).join('');
+
     this.startBuilding();
   }
 
   /**
    * Method to start building the website
+   * This will be called when the website is first loaded
+   * or when the user logs out
+   * It will create the landing page, initialize the basic elements,
    */
   startBuilding() {
     const mainContent = document.createElement('div');
@@ -513,7 +588,7 @@ class Website {
     this.initializeBasicElements();
     this.initialize();
 
-    // get users
+    // Fill the dropdown with the user data
     let generatedUsers = this.userGenerator.allUsers;
     let staffIDArray = [];
     for (const user of generatedUsers) {
@@ -524,8 +599,24 @@ class Website {
       fillDropdown(employeeID, staffIDArray);
     }
   }
+
+  /**
+   * Method to refresh the user cards
+   * This will be called when the user clicks the "Refresh Users" button
+   */
+  refreshCards() {
+    const cardDiv = document.getElementById('card-div');
+    cardDiv.innerHTML = '';
+    for (const generatedUser of this.userGenerator.allUsers) {
+      this.generateCard(generatedUser);
+    }
+    this.addStaffButton();
+  }
 }
 
+/**
+ * This function is responsible for generating the automated building of the website.
+ */
 const generateAutomation = () => {
   const USER_COUNT = 15;
 
@@ -536,6 +627,7 @@ const generateAutomation = () => {
   website.startBuilding();
   userGenerator.generateMultipleUsers(USER_COUNT);
 
+  // The initial filling of the dropdown
   let generatedUsers = userGenerator.allUsers;
   let staffIDArray = [];
   for (const user of generatedUsers) {
@@ -547,10 +639,17 @@ const generateAutomation = () => {
   }
 }
 
+/**
+ * This function is responsible for filling the dropdown with user data.
+ * It also adds an event listener to the dropdown to update the username and password inputs.
+ * @param employeeID - The ID of the employee
+ * @param staffIDArray - An array of staff IDs
+ */
 const fillDropdown = (employeeID, staffIDArray) => {
   let dropdown = document.getElementById('names-dropdown');
   let option = document.createElement('option');
 
+  // If the employee is staff, add "Staff" to the dropdown option
   if (staffIDArray.includes(employeeID)) {
     option.text = `Employee ${employeeID} (Staff)`;
   } else {
@@ -558,10 +657,9 @@ const fillDropdown = (employeeID, staffIDArray) => {
   }
 
   option.value = employeeID;
-
   dropdown.add(option);
 
-  addEventListener('change', (event) => {
+  dropdown.addEventListener('change', (event) => {
     const userNameInput = document.getElementById('first-name');
     const passwordInput = document.getElementById('last-name');
     userNameInput.value = `employee${event.target.value}`;

@@ -9,13 +9,12 @@
   --danger: #e9c46a;
   --warning: #f4a261;
   --card-bg: rgba(202, 240, 248, 0.7);
-  --card-headers: #344e41;
+  --card-headers: #03045e;
   --modal-rgba: rgba(255, 255, 255, 0.75);
   --navbar-background: #00b4d8;
 }
 
 .card-user-header {
-  /*background: var(--card-bg);*/
   color: var(--card-headers);
 }
 
@@ -151,11 +150,11 @@ footer {
   box-sizing: border-box;
 }
 
-#landing-page-button {
+#landing-page-button, #refresh-button {
   background: var(--secondary);
   color: var(--main-text-color);
 }
 
-#landing-page-button:hover {
+#landing-page-button:hover, #refresh-button:hover {
   background: var(--main-accent-color-hover);
 }
