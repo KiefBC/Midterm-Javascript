@@ -64,7 +64,7 @@ class UserGenerator {
   randomPhoto() {
     const numberOfPhotos = 25; // For example, if you have 10 photos in your folder
     const photoIndex = Math.floor(Math.random() * numberOfPhotos) + 1; // to get a number between 1 and numberOfPhotos
-    return `static/img/user${photoIndex}.jpg`;
+    return `./static/img/user${photoIndex}.jpg`;
   }
 
   /**
