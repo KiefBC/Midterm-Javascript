@@ -1,9 +1,13 @@
 /**
  * I had a lot of fun doing this Midterm. I hope you enjoy it as much as I did. I spent a lot of time thinking how I wanted to do it. So I went with what I think is a weird design. I decided to try and make a site that built itself based on the users interactions with it.
- * I think it does just that. All the user would see in the HTML is a blank file. But once the website is loaded its filled and fully functional.
+ * I think it does just that. All the user would see in the HTML is a blank file. But once the website is loaded its filled and fully functional. Would this ever be a good idea? Probably not. But it was fun to do.
  *
- * I also wanted to make it so that the user could interact with the site, so it would change based on the users interactions.
+ * I just wanted to make a JavaScript OOP-style Website.
+ *
+ * I also wanted to make it so that the user could interact with the site, and it would change based on the users interactions. Like deleting, refreshing, and signing in and out.
+ *
  * I ended up making a bunch of words and generate them together using some basic month to try and get unique names and content. I think the names are quite funny for what they are. No the users faces you see are not real people, they are fake as heck!
+ * https://www.unrealperson.com/
  *
  * I learned quite a bit from this. I also learned a bit more about how to interact with Bootstrap using strictly Javascript.
  *
@@ -58,9 +62,9 @@ class UserGenerator {
    * @returns - A random photo
    */
   randomPhoto() {
-    const numberOfPhotos = 14; // For example, if you have 10 photos in your folder
+    const numberOfPhotos = 25; // For example, if you have 10 photos in your folder
     const photoIndex = Math.floor(Math.random() * numberOfPhotos) + 1; // to get a number between 1 and numberOfPhotos
-    return `/static/img/user${photoIndex}.jpg`;
+    return `static/img/user${photoIndex}.jpg`;
   }
 
   /**
@@ -479,6 +483,8 @@ class Website {
 
       } else {
         alert('Form is invalid.');
+        // reload
+        location.reload();
       }
 
       if (this.humanUser.isStaff) {
