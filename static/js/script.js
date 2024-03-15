@@ -2,7 +2,7 @@
  * I had a lot of fun doing this Midterm. I hope you enjoy it as much as I did. I spent a lot of time thinking how I wanted to do it. So I went with what I think is a weird design. I decided to try and make a site that built itself based on the users interactions with it.
  * I think it does just that. All the user would see in the HTML is a blank file. But once the website is loaded its filled and fully functional.
  *
- * I also wanted to make it so that the user could interact with the site and it would change based on the users interactions. I think I did that as well.
+ * I also wanted to make it so that the user could interact with the site, so it would change based on the users interactions.
  * I ended up making a bunch of words and generate them together using some basic month to try and get unique names and content. I think the names are quite funny for what they are. No the users faces you see are not real people, they are fake as heck!
  *
  * I learned quite a bit from this. I also learned a bit more about how to interact with Bootstrap using strictly Javascript.
@@ -107,7 +107,8 @@ class UserGenerator {
 }
 
 /**
- * This Class is responsible for registering and logging in real users.
+ * This Class is responsible for creating a human user.
+ * This user will be used to interact with the website.
  */
 class HumanUser {
   constructor() {
@@ -632,6 +633,7 @@ const generateAutomation = () => {
   let staffIDArray = [];
   for (const user of generatedUsers) {
     const employeeID = user.id;
+    // If the user is staff, add their ID to the staffIDArray
     if (user.isStaff) {
       staffIDArray.push(employeeID);
     }
