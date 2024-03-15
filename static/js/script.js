@@ -131,7 +131,7 @@ class Website {
 
   /**
    * Method to initialize the basic elements of the website.
-   * This includes the navbar, video background, and footer.
+   * This includes the navbar, video background, and user cards.
    * It also creates a container for the user cards.
    */
   initializeBasicElements() {
@@ -257,9 +257,9 @@ class Website {
                                 </svg>
                             </span>
                             <input type="text" class="form-control" id="first-name" placeholder="Enter your first name..."
-                                   required pattern="^[A-Za-z0-9]+$" value="JNelson">
+                                   required pattern="^[A-Za-z0-9]+$">
                             <div class="valid-feedback text-center">Valid.</div>
-                            <div class="invalid-feedback text-center">Please fill out this field.</div>
+                            <div class="invalid-feedback text-center">Please fill out this field. Only Alphabetic and Digits.</div>
                         </div>
                         <div class="mb-3 input-group">
                             <label for="last-name" class="form-label" hidden>Password</label>
@@ -271,9 +271,9 @@ class Website {
                                 </svg>
                             </span>
                             <input type="password" class="form-control" id="last-name" placeholder="Enter your last name..."
-                                   required pattern="^[A-Za-z]+$" value="JNelson">
+                                   required pattern="^[A-Za-z0-9]+$">
                             <div class="valid-feedback text-center">Valid.</div>
-                            <div class="invalid-feedback text-center">Please fill out this field.</div>
+                            <div class="invalid-feedback text-center">Please fill out this field. Only Alphabetic and Digits.</div>
                         </div>
                     </form>
                     <div class="d-flex flex-column justify-content-center mb-3" id="login-response">
