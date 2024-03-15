@@ -667,6 +667,7 @@ const fillDropdown = (employeeID, staffIDArray) => {
   });
 }
 
+// LET THE GAMES BEGIN
 generateAutomation();
 
 
