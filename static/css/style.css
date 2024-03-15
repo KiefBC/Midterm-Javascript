@@ -101,13 +101,13 @@ footer {
 }
 
 .user-image {
-  width: auto; /* Set your desired width */
-  height: 300px; /* Set your desired height */
-  object-fit: cover; /* This property ensures the image covers the area without losing its aspect ratio */
+  width: auto;
+  height: 300px;
+  object-fit: cover;
 }
 
 .generated-cards:hover {
-  animation: pulse 1s infinite; /* Increase the duration to slow down the animation */
+  animation: pulse 1s infinite;
   animation-delay: 50ms; /* Add a delay before the animation starts */
   transition: animation 5s ease-in-out;
 }
@@ -138,7 +138,6 @@ footer {
   background-color: var(--modal-rgba);
 }
 
-/* rounded corner black 65% opacity background for landing-page text content */
 .landing-page-content {
   display: flex;
   flex-direction: column;
