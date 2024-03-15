@@ -96,10 +96,6 @@ input[type="text"]:focus, input[type="password"]:focus {
   background: var(--main-accent-color-hover);
 }
 
-footer {
-  margin-top: auto;
-}
-
 .user-image {
   width: auto;
   height: 300px;

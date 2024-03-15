@@ -180,17 +180,6 @@ class Website {
     containerDiv.appendChild(rowDiv);
     mainContent.appendChild(containerDiv);
 
-    const footer = document.createElement('footer');
-    footer.classList.add('bg-dark', 'text-center', 'text-white', 'py-3');
-    footer.innerHTML = `
-      <div class="container">
-        <p class="mx-auto my-auto">Copyright &copy; Kiefer&trade;</p>
-      </div>
-    `;
-
-    // append footer after main content
-    mainContent.parentNode.insertBefore(footer, mainContent.nextSibling);
-
     const loginModal = document.createElement('div');
     loginModal.classList.add('modal', 'fade');
     loginModal.id = 'login-modal';
